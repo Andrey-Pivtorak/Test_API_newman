@@ -1,14 +1,120 @@
 {
 	"info": {
-		"_postman_id": "67d91bc7-aa8b-4727-aad5-9abcb298ed08",
+		"_postman_id": "55e8151d-9899-4e8e-84ac-167bb0e07aa3",
 		"name": "store",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "18317683"
+		"_exporter_id": "14941705"
 	},
 	"item": [
 		{
 			"name": "Products",
 			"item": [
+				{
+					"name": "Create product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Response time is less than 250ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(250);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code has status created\", () => {\r",
+									"    pm.response.to.have.status(\"Created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.price).to.be.a(\"number\");\r",
+									"    pm.expect(jsonData.sku).to.be.a(\"number\");\r",
+									"    pm.expect(jsonData.description).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Checking that product is created with correct values\", () => {\r",
+									"    pm.expect(jsonData.name).to.eql(\"lemon\");\r",
+									"    pm.expect(jsonData.price).to.eql(10);\r",
+									"    pm.expect(jsonData.sku).to.eql(87345748)\r",
+									"    pm.expect(jsonData.description).to.eql(\"It is a yellow, very sour but healthy fruit.\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"    \"id\": {\r",
+									"        \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"name\": {\r",
+									"        \"type\": \"string\"\r",
+									"    },\r",
+									"    \"price\": {\r",
+									"        \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"sku\": {\r",
+									"        \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"description\": {\r",
+									"        \"type\": \"string\"\r",
+									"    }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"    \"id\",\r",
+									"    \"name\",\r",
+									"    \"price\",\r",
+									"    \"sku\",\r",
+									"    \"description\"\r",
+									"    ]\r",
+									"}\r",
+									"\r",
+									"pm.test('Checking that schema is valid', () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"// pm.collectionVariables.set(\"productID\", pm.response.json().id);\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"lemon\",\r\n    \"price\": 10,\r\n    \"sku\": 87345748,\r\n    \"description\": \"It is a yellow, very sour but healthy fruit.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "List products",
 					"event": [
@@ -16,15 +122,62 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"pm.test(\"Check response time is less than 200ms\", () => {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
 									"});\r",
-									"pm.test(\"Status code is 200\", function () {\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"pm.test(\"Content-Type is present\", function () {\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
 									"    pm.response.to.have.header(\"Content-Type\");\r",
-									"});"
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": [\r",
+									"    {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"name\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"price\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"sku\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"description\": {\r",
+									"          \"type\": \"string\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"id\",\r",
+									"        \"name\",\r",
+									"        \"price\",\r",
+									"        \"sku\",\r",
+									"        \"description\"\r",
+									"      ]\r",
+									"    }\r",
+									"  ]\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Checking that schema is valid\", () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response shouldn`t be empty\", () => {\r",
+									"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -47,43 +200,76 @@
 				},
 				{
 					"name": "Get product by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check response time is less than 200ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object has correct id value\", () => {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"    \"id\": {\r",
+									"        \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"name\": {\r",
+									"        \"type\": \"string\"\r",
+									"    },\r",
+									"    \"price\": {\r",
+									"        \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"sku\": {\r",
+									"        \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"description\": {\r",
+									"        \"type\": \"string\"\r",
+									"    }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"    \"id\",\r",
+									"    \"name\",\r",
+									"    \"price\",\r",
+									"    \"sku\",\r",
+									"    \"description\"\r",
+									"    ]\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Checking that schema is valid\", () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/products/3",
+							"raw": "{{baseUrl}}/products/4",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"products",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create product",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"orange\",\r\n    \"price\": 8,\r\n    \"sku\": 123321123,\r\n    \"description\": \"wouh\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/products",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"products"
+								"4"
 							]
 						}
 					},
@@ -91,12 +277,82 @@
 				},
 				{
 					"name": "Update product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Response time is less than 250ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(250);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.price).to.be.a(\"number\");\r",
+									"    pm.expect(jsonData.sku).to.be.a(\"number\");\r",
+									"    pm.expect(jsonData.description).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Product is changed with correct values\", () => {\r",
+									"  pm.expect(jsonData.name).to.eql(\"kiwi\");\r",
+									"  pm.expect(jsonData.price).to.eql(12);\r",
+									"  pm.expect(jsonData.sku).to.eql(87345748);\r",
+									"  pm.expect(jsonData.description).to.eql(\"it's an exotic fruit\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"    \"id\": {\r",
+									"        \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"name\": {\r",
+									"        \"type\": \"string\"\r",
+									"    },\r",
+									"    \"price\": {\r",
+									"        \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"sku\": {\r",
+									"        \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"description\": {\r",
+									"        \"type\": \"string\"\r",
+									"    }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"    \"id\",\r",
+									"    \"name\",\r",
+									"    \"price\",\r",
+									"    \"sku\",\r",
+									"    \"description\"\r",
+									"    ]\r",
+									"}\r",
+									"\r",
+									"pm.test('Checking that schema is valid', () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 4,\r\n    \"name\": \"banana\",\r\n    \"price\": 155,\r\n    \"sku\": 123321123,\r\n    \"description\": \"changed description\"\r\n}",
+							"raw": "{\r\n    \"id\": 4,\r\n    \"name\": \"kiwi\",\r\n    \"price\": 12,\r\n    \"sku\": 87345748,\r\n    \"description\": \"it's an exotic fruit\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -116,7 +372,157 @@
 					"response": []
 				},
 				{
+					"name": "Check pagination",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": [\r",
+									"    {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"name\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"price\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"sku\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"description\": {\r",
+									"          \"type\": \"string\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"id\",\r",
+									"        \"name\",\r",
+									"        \"price\",\r",
+									"        \"sku\",\r",
+									"        \"description\"\r",
+									"      ]\r",
+									"    }\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Schema is valid\", () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Correct quantity of object per page\", () => {\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.length).eql(Number(pm.request.url.query.get('pageSize')))\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products?page=1&pageSize=3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Remove product by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deleted element\", () => {\r",
+									"    pm.expect(jsonData.id).to.eql(4);\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"name\": {\r",
+									"        \"type\": \"string\"\r",
+									"        },\r",
+									"        \"price\": {\r",
+									"        \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"sku\": {\r",
+									"        \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"description\": {\r",
+									"        \"type\": \"string\"\r",
+									"        },\r",
+									"        \"id\": {\r",
+									"        \"type\": \"integer\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"name\",\r",
+									"        \"price\",\r",
+									"        \"sku\",\r",
+									"        \"description\",\r",
+									"        \"id\"\r",
+									"    ]\r",
+									"};\r",
+									"\r",
+									"pm.test('Checking that schema is valid', () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -139,7 +545,150 @@
 			"name": "Orders",
 			"item": [
 				{
+					"name": "Create order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Response time is less than 250ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(250);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code has status created\", () => {\r",
+									"    pm.response.to.have.status(\"Created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.sku).to.be.a(\"number\");\r",
+									"    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Checking that product is created with correct values\", () => {\r",
+									"    pm.expect(jsonData.name).to.eql(\"laptop\");\r",
+									"    pm.expect(jsonData.sku).to.eql(845396)\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"name\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"sku\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        }\r",
+									"      },\r",
+									"    \"required\": [\r",
+									"    \"id\",\r",
+									"    \"name\",\r",
+									"    \"sku\"\r",
+									"    ]\r",
+									"}\r",
+									"\r",
+									"pm.test('Checking that schema is valid', () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"laptop\",\r\n    \"sku\": 845396\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "List orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check response time is less than 200ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"array\",\r",
+									"    \"items\": [\r",
+									"    {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"name\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"sku\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"id\",\r",
+									"        \"name\",\r",
+									"        \"sku\"\r",
+									"      ]\r",
+									"    }]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Checking that schema is valid\", () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response shouldn`t be empty\", () => {\r",
+									"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -157,43 +706,67 @@
 				},
 				{
 					"name": "Get order by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check response time is less than 200ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object has correct id value\", () => {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"\"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"name\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"sku\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        }\r",
+									"      },\r",
+									"    \"required\": [\r",
+									"    \"id\",\r",
+									"    \"name\",\r",
+									"    \"sku\"\r",
+									"    ]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Checking that schema is valid\", () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/orders/3",
+							"raw": "{{baseUrl}}/orders/4",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"orders",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create order",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"order5\",\r\n    \"sku\": 123425445656765\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/orders",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"orders"
+								"4"
 							]
 						}
 					},
@@ -201,12 +774,70 @@
 				},
 				{
 					"name": "Update order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Response time is less than 250ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(250);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.sku).to.be.a(\"number\");\r",
+									"    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Product is changed with correct values\", () => {\r",
+									"  pm.expect(jsonData.name).to.eql(\"smartphone\");\r",
+									"  pm.expect(jsonData.sku).to.eql(333535);\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"name\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"sku\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        }\r",
+									"      },\r",
+									"    \"required\": [\r",
+									"    \"id\",\r",
+									"    \"name\",\r",
+									"    \"sku\"\r",
+									"    ]\r",
+									"}\r",
+									"\r",
+									"pm.test('Checking that schema is valid', () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 4,\r\n    \"name\": \"order5\",\r\n    \"sku\": 123425445656765\r\n}",
+							"raw": "{\r\n    \"name\": \"smartphone\",\r\n    \"sku\": 333535,\r\n    \"id\": 4\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -226,7 +857,150 @@
 					"response": []
 				},
 				{
+					"name": "Check pagination",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": [\r",
+									"    {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"name\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"sku\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"id\",\r",
+									"        \"name\",\r",
+									"        \"sku\",\r",
+									"      ]\r",
+									"    }\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Schema is valid\", () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Correct quantity of object per page\", () => {\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.length).eql(Number(pm.request.url.query.get('pageSize')))\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"pageSize\", 4);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orders?page=1&pageSize={{pageSize}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "{{pageSize}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Remove order by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deleted element\", () => {\r",
+									"    pm.expect(jsonData.id).to.eql(4);\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"name\": {\r",
+									"        \"type\": \"string\"\r",
+									"        },\r",
+									"        \"sku\": {\r",
+									"        \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"id\": {\r",
+									"        \"type\": \"integer\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"name\",\r",
+									"        \"sku\",\r",
+									"        \"id\"\r",
+									"    ]\r",
+									"};\r",
+									"\r",
+									"pm.test('Checking that schema is valid', () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -249,7 +1023,208 @@
 			"name": "Users",
 			"item": [
 				{
+					"name": "Create user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Response time is less than 250ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(250);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code has status created\", () => {\r",
+									"    pm.response.to.have.status(\"Created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.id).to.be.an(\"number\");\r",
+									"    pm.expect(jsonData.firstName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.lastName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.email).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.dateOfBirth).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.emailVerified).to.be.a(\"boolean\");\r",
+									"    pm.expect(jsonData.signUpDate).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.status).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.level).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Checking that product is created with correct values\", () => {\r",
+									"    pm.expect(jsonData.firstName).to.eql(\"Ivan\");\r",
+									"    pm.expect(jsonData.lastName).to.eql(\"Petrov\");\r",
+									"    pm.expect(jsonData.email).to.eql(\"ivan-petrov@gmail.com\");\r",
+									"    pm.expect(jsonData.dateOfBirth).to.eql(\"1998-04-25\");\r",
+									"    pm.expect(jsonData.emailVerified).to.eql(false);\r",
+									"    pm.expect(jsonData.signUpDate).to.eql(\"2017-01-03\");\r",
+									"    pm.expect(jsonData.status).to.eql(\"active\");\r",
+									"    pm.expect(jsonData.level).to.eql(\"master\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									" \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"firstName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"lastName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"email\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"dateOfBirth\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"emailVerified\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        },\r",
+									"        \"signUpDate\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"status\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"level\": {\r",
+									"          \"type\": \"string\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"id\",\r",
+									"        \"firstName\",\r",
+									"        \"lastName\",\r",
+									"        \"email\",\r",
+									"        \"dateOfBirth\",\r",
+									"        \"emailVerified\",\r",
+									"        \"signUpDate\",\r",
+									"        \"status\",\r",
+									"        \"level\"\r",
+									"    ]\r",
+									"};\r",
+									"\r",
+									"pm.test('Checking that schema is valid', () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Ivan\",\r\n    \"lastName\": \"Petrov\",\r\n    \"email\": \"ivan-petrov@gmail.com\",\r\n    \"dateOfBirth\": \"1998-04-25\",\r\n    \"emailVerified\": false,\r\n    \"signUpDate\": \"2017-01-03\",\r\n    \"status\": \"active\",\r\n    \"level\": \"master\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "List users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check response time is less than 200ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": [\r",
+									"    {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"firstName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"lastName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"email\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"dateOfBirth\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"emailVerified\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        },\r",
+									"        \"signUpDate\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"status\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"level\": {\r",
+									"          \"type\": \"string\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"id\",\r",
+									"        \"firstName\",\r",
+									"        \"lastName\",\r",
+									"        \"email\",\r",
+									"        \"dateOfBirth\",\r",
+									"        \"emailVerified\",\r",
+									"        \"signUpDate\",\r",
+									"        \"status\",\r",
+									"        \"level\"\r",
+									"      ]\r",
+									"    }],\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Checking that schema is valid\", () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response shouldn`t be empty\", () => {\r",
+									"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -267,43 +1242,91 @@
 				},
 				{
 					"name": "Get user by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check response time is less than 200ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object has correct id value\", () => {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									" \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"firstName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"lastName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"email\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"dateOfBirth\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"emailVerified\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        },\r",
+									"        \"signUpDate\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"status\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"level\": {\r",
+									"          \"type\": \"string\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"id\",\r",
+									"        \"firstName\",\r",
+									"        \"lastName\",\r",
+									"        \"email\",\r",
+									"        \"dateOfBirth\",\r",
+									"        \"emailVerified\",\r",
+									"        \"signUpDate\",\r",
+									"        \"status\",\r",
+									"        \"level\"\r",
+									"    ]\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Checking that schema is valid\", () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/users/3",
+							"raw": "{{baseUrl}}/users/10",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"users",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create user",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Dream\",\r\n    \"lastName\": \"Real\",\r\n    \"email\": \"dream.real@gmail.com\",\r\n    \"dateOfBirth\": \"2001-10-99\",\r\n    \"emailVerified\": true,\r\n    \"signUpDate\": \"2019-08-24\",\r\n    \"status\": \"active\",\r\n    \"level\": \"lord\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/users",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"users"
+								"10"
 							]
 						}
 					},
@@ -311,12 +1334,110 @@
 				},
 				{
 					"name": "Update user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Response time is less than 250ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(250);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code has status created\", () => {\r",
+									"    pm.response.to.have.status(\"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.id).to.be.an(\"number\");\r",
+									"    pm.expect(jsonData.firstName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.lastName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.email).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.dateOfBirth).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.emailVerified).to.be.a(\"boolean\");\r",
+									"    pm.expect(jsonData.signUpDate).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.status).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.level).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Checking that product is created with correct values\", () => {\r",
+									"    pm.expect(jsonData.firstName).to.eql(\"Oleg\");\r",
+									"    pm.expect(jsonData.lastName).to.eql(\"Petrov\");\r",
+									"    pm.expect(jsonData.email).to.eql(\"ivan-petrov@gmail.com\");\r",
+									"    pm.expect(jsonData.dateOfBirth).to.eql(\"1998-04-25\");\r",
+									"    pm.expect(jsonData.emailVerified).to.eql(true);\r",
+									"    pm.expect(jsonData.signUpDate).to.eql(\"2017-01-03\");\r",
+									"    pm.expect(jsonData.status).to.eql(\"passive\");\r",
+									"    pm.expect(jsonData.level).to.eql(\"master\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									" \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"firstName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"lastName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"email\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"dateOfBirth\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"emailVerified\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        },\r",
+									"        \"signUpDate\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"status\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"level\": {\r",
+									"          \"type\": \"string\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"id\",\r",
+									"        \"firstName\",\r",
+									"        \"lastName\",\r",
+									"        \"email\",\r",
+									"        \"dateOfBirth\",\r",
+									"        \"emailVerified\",\r",
+									"        \"signUpDate\",\r",
+									"        \"status\",\r",
+									"        \"level\"\r",
+									"    ]\r",
+									"};\r",
+									"\r",
+									"pm.test('Checking that schema is valid', () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Ilon\",\r\n    \"lastName\": \"Mask\",\r\n    \"email\": \"ilon.mask@gmail.com\",\r\n    \"dateOfBirth\": \"2001-10-99\",\r\n    \"emailVerified\": true,\r\n    \"signUpDate\": \"2019-08-24\",\r\n    \"status\": \"active\",\r\n    \"level\": \"lord\",\r\n    \"id\": 10\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Oleg\",\r\n    \"lastName\": \"Petrov\",\r\n    \"email\": \"ivan-petrov@gmail.com\",\r\n    \"dateOfBirth\": \"1998-04-25\",\r\n    \"emailVerified\": true,\r\n    \"signUpDate\": \"2017-01-03\",\r\n    \"status\": \"passive\",\r\n    \"level\": \"master\",\r\n    \"id\": 10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -336,7 +1457,196 @@
 					"response": []
 				},
 				{
+					"name": "Check pagination",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": [\r",
+									"    {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"firstName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"lastName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"email\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"dateOfBirth\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"emailVerified\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        },\r",
+									"        \"signUpDate\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"status\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"level\": {\r",
+									"          \"type\": \"string\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"id\",\r",
+									"        \"firstName\",\r",
+									"        \"lastName\",\r",
+									"        \"email\",\r",
+									"        \"dateOfBirth\",\r",
+									"        \"emailVerified\",\r",
+									"        \"signUpDate\",\r",
+									"        \"status\",\r",
+									"        \"level\"\r",
+									"      ]\r",
+									"    }],\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Schema is valid\", () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Correct quantity of object per page\", () => {\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.length).eql(Number(pm.request.url.query.get('pageSize')))\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"pageSize\", 5);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users?page=1&pageSize={{pageSize}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "{{pageSize}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Remove user by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deleted element\", () => {\r",
+									"    pm.expect(jsonData.id).to.eql(10);\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									" \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"firstName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"lastName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"email\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"dateOfBirth\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"emailVerified\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        },\r",
+									"        \"signUpDate\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"status\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"level\": {\r",
+									"          \"type\": \"string\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"id\",\r",
+									"        \"firstName\",\r",
+									"        \"lastName\",\r",
+									"        \"email\",\r",
+									"        \"dateOfBirth\",\r",
+									"        \"emailVerified\",\r",
+									"        \"signUpDate\",\r",
+									"        \"status\",\r",
+									"        \"level\"\r",
+									"    ]\r",
+									"};\r",
+									"\r",
+									"pm.test('Checking that schema is valid', () => {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -381,6 +1691,10 @@
 			"key": "baseUrl",
 			"value": "http://localhost:3000",
 			"type": "string"
+		},
+		{
+			"key": "pageSize",
+			"value": ""
 		}
 	]
 }

@@ -1,0 +1,51 @@
+name: Test-Postman
+on:
+  push:
+    branches:
+      - main
+jobs:
+  test-api:
+    runs-on: ubuntu-20.04
+    concurrency: ci-${{github.ref}}
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2.3.1
+
+
+      # INstall Node on the runner
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '18'
+
+
+      # Install the newman command line utility and also install the html extra reporter
+      - name: Install newman
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
+      # Make directory to upload the test results
+      - name: Make Directory for results
+        run: mkdir -p testResults
+
+
+      # Run the POSTMAN collection
+      - name: Run POSTMAN collection
+        if: failure()
+        run: |
+          newman run store.collection.json -r cli,htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme  > testResults/runreport1.html
+      # Upload the contents of Test Results directory to workspace
+      - name: Output the run Details
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: RunReports
+          path: testResults
+
+      - name: Deploy to GitHub
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: gh-pages
+          folder: testResults
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
