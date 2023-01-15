@@ -38,5 +38,5 @@ Test examples overview:
 -  Test response time.
 -  Test response thanks to json schema validation.
 
-### You must have these result:
+### You must have this result:
 
