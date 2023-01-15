@@ -31,8 +31,9 @@ jobs:
 
       # Run the POSTMAN collection
       - name: Run POSTMAN collection
-        run: |
-          npm run tern-on-api
+        run: npm run tern-on-api
+      - name: Create report
+        run: npm run newman:html
       # Upload the contents of Test Results directory to workspace
       - name: Output the run Details
         if: always()
