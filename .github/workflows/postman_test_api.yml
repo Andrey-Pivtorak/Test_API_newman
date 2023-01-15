@@ -1,51 +1,50 @@
-name: Test-Postman
+name: Postman tests
+
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches: [main]
+
 jobs:
-  test-api:
-    runs-on: ubuntu-20.04
-    concurrency: ci-${{github.ref}}
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2.3.1
+    Run_test:
+        runs-on: ubuntu-20.04 # Choosing OS
+        strategy:
+            matrix:
+                node-version: latest
+                # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        steps:
+            - uses: actions/checkout@v2
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "npm"
+            - run: npm i npm@latest
+            - run: npm i
 
+            - name: Install newman
+              run: npm install -g newman
 
-      # INstall Node on the runner
-      - name: Install Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '18'
+            - name: Install reporter
+              run: npm install -g allure-commandline
 
+            - name: run test
+              run: npm run test:allure
 
-      # Install the newman command line utility and also install the html extra reporter
-      - name: Install newman
-        run: |
-          npm install -g newman
-          npm install -g newman-reporter-htmlextra
-      # Make directory to upload the test results
-      - name: Make Directory for results
-        run: mkdir -p testResults
-
-
-      # Run the POSTMAN collection
-      - name: Run POSTMAN collection
-        if: failure()
-        run: |
-          npx newman run store.collection.json -r cli,htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme  > testResults/runreport1.html
-      # Upload the contents of Test Results directory to workspace
-      - name: Output the run Details
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: RunReports
-          path: testResults
-
-      - name: Deploy to GitHub
-        uses: JamesIves/github-pages-deploy-action@4.1.5
-        with:
-          branch: gh-pages
-          folder: testResults
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Upload Results
+              uses: actions/upload-artifact@v1
+              if: always()
+              with:
+                name: allure-results
+                path: ./allure-results # Name of the folder with allure results
+            - name: Publishing Allure artifact to Github Actions
+              uses: actions/upload-artifact@v2
+              if: always()
+              with:
+                name: allure-report
+                path: allure-report
+            - name: Deploy report to gh-pages
+              uses: JamesIves/github-pages-deploy-action@4.1.4
+              if: always()
+              with:
+                branch: gh-pages # The branch the action should deploy to.
+                folder: allure-report # The folder the action should deploy.
