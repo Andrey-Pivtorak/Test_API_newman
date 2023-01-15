@@ -11,7 +11,7 @@
     "test:allure": "timeout 30s npm run tern-on-api & npm run test & npm run allure:report",
     "test1": "newman run store.collection.json",
     "newman:html": "newman run store.collection.json -r htmlextra",
-    "newman:report": "npm run test1 & npm run newman:html"
+    "newman:report": "timeout 20s npm run tern-on-api & npm run newman:html"
   },
   "keywords": [
     "api",
