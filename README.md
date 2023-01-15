@@ -39,4 +39,4 @@ Test examples overview:
 -  Test response thanks to json schema validation.
 
 ### You must have this result:
-
+![](https://github.com/Andrey-Pivtorak/Postman_API_testing/blob/main/mockApi/screens/allure_report.png)
