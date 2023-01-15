@@ -6,17 +6,12 @@ on:
 jobs:
   Run_test:
     runs-on: ubuntu-20.04 # Choosing OS
-    strategy:
-        matrix:
-            node-version: [18.12.1]
-            # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
+      - uses: actions/checkout@v2.3.1
+      - name: Install Node
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          node-version: latest
       - run: npm i npm@latest
       - run: npm i
 
@@ -41,7 +36,7 @@ jobs:
         with:
           name: allure-report
           path: allure-report
-      - name: Deploy report to gh-pages
+      - name: Deploy report
         uses: JamesIves/github-pages-deploy-action@4.1.4
         if: always()
         with:
