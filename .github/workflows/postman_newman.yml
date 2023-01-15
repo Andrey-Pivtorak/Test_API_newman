@@ -31,7 +31,7 @@ jobs:
 
       # Run the POSTMAN collection
       - name: Run POSTMAN collection
-        run: newman run store.collection.json -r htmlextra
+        run: npm run newman:report
       # Upload the contents of Test Results directory to workspace
       - name: Output the run Details
         if: always()
