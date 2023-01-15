@@ -41,3 +41,4 @@ jobs:
         with:
           branch: gh-pages
           folder: allure-report
+          github_token: ${{ secrets.GITHUB_TOKEN }}
