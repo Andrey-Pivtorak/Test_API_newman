@@ -31,9 +31,7 @@ jobs:
 
       # Run the POSTMAN collection
       - name: Run POSTMAN collection
-        if: failure()
-        run: |
-          newman run store.collection.json -r cli,htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme  > testResults/runreport.html
+        run: newman run store.collection.json -r htmlextra
       # Upload the contents of Test Results directory to workspace
       - name: Output the run Details
         if: always()
