@@ -1,8 +1,7 @@
 name: Postman API testing
 on:
   push:
-    branches:
-      -main
+    branches: [main]
 jobs:
   Run_test:
     runs-on: ubuntu-20.04 # Choosing OS
