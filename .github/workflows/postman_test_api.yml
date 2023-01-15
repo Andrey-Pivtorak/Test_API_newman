@@ -1,50 +1,49 @@
-name: Postman tests
-
+name: Postman API testing
 on:
-    push:
-        branches: [main]
-
+  push:
+    branches:
+      -main
 jobs:
-    Run_test:
-        runs-on: ubuntu-20.04 # Choosing OS
-        strategy:
-            matrix:
-                node-version: latest
-                # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        steps:
-            - uses: actions/checkout@v2
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v2
-              with:
-                  node-version: ${{ matrix.node-version }}
-                  cache: "npm"
-            - run: npm i npm@latest
-            - run: npm i
+  Run_test:
+    runs-on: ubuntu-20.04 # Choosing OS
+    strategy:
+        matrix:
+            node-version: [18.12.1]
+            # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm i npm@latest
+      - run: npm i
 
-            - name: Install newman
-              run: npm install -g newman
+      - name: Install newman
+        run: npm install -g newman
 
-            - name: Install reporter
-              run: npm install -g allure-commandline
+      - name: Install reporter
+        run: npm install -g allure-commandline
 
-            - name: run test
-              run: npm run test:allure
+      - name: run test
+        run: npm run test:allure
 
-            - name: Upload Results
-              uses: actions/upload-artifact@v1
-              if: always()
-              with:
-                name: allure-results
-                path: ./allure-results # Name of the folder with allure results
-            - name: Publishing Allure artifact to Github Actions
-              uses: actions/upload-artifact@v2
-              if: always()
-              with:
-                name: allure-report
-                path: allure-report
-            - name: Deploy report to gh-pages
-              uses: JamesIves/github-pages-deploy-action@4.1.4
-              if: always()
-              with:
-                branch: gh-pages # The branch the action should deploy to.
-                folder: allure-report # The folder the action should deploy.
+      - name: Upload Results
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: allure-results
+          path: ./allure-results # Name of the folder with allure results
+      - name: Publishing Allure artifact to Github Actions
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: allure-report
+          path: allure-report
+      - name: Deploy report to gh-pages
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        if: always()
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: allure-report # The folder the action should deploy.
