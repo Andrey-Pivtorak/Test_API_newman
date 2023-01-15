@@ -32,7 +32,7 @@ Routes `/products`, `/orders` and `/users`. Below is a table of supported operat
 | DELETE   | /users/:id | **e.g 9**  | **Deleted object** |
 
 Test examples overview:
-- Test pagination, by way like `http://localhost:3000/users?page=1&pageSize=2`.
+- Test pagination, by way like `http://localhost:3000/users?page=1&pageSize=5`.
 - Test sorting, by way like `http://localhost:3000/users?sortOrder=ASC&sortKey=email`. You can sort an any resource response using query parameters sortOrder and sortKey.
 -  Test status code for REST API (200, 201).
 -  Test response time.
