@@ -1,4 +1,4 @@
-# **Postman + newman + github actions + allure**
+# **Postman + newman + github actions + newman**
 
 ## **Commands Overview**
 1. Install Node.js (minimum 16 version) on your PC
