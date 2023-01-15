@@ -33,7 +33,6 @@ jobs:
       - name: Run POSTMAN collection
         run: |
           npm run tern-on-api
-          npm run newman:report
       # Upload the contents of Test Results directory to workspace
       - name: Output the run Details
         if: always()
